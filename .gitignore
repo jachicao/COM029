@@ -1,5 +1,7 @@
 .env
 
+android/.gradle
+
 ### Node ###
 # Logs
 logs
