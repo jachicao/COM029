@@ -1,6 +1,4 @@
 import React from 'react';
-// eslint-disable-next-line
-import PropTypes  from 'prop-types';
 
 import {
   StyleSheet,
@@ -12,6 +10,8 @@ import MapView from 'react-native-maps';
 
 import { FOOTBRIDGES } from '../constants/footbridges';
 import { SOS_POINTS } from '../constants/sosPoints';
+import runImage from '../images/run.png';
+import walkImage from '../images/walk.png';
 
 const { width, height } = Dimensions.get('window');
 
@@ -105,18 +105,6 @@ class Map extends React.Component {
           style={styles.map}
           initialRegion={this.state.region}
         >
-          <MapView.Marker
-            coordinate={{
-              latitude: LATITUDE + (LATITUDE_DELTA / 2),
-              longitude: LONGITUDE + (LONGITUDE_DELTA / 2),
-            }}
-          />
-          <MapView.Marker
-            coordinate={{
-              latitude: LATITUDE - (LATITUDE_DELTA / 2),
-              longitude: LONGITUDE - (LONGITUDE_DELTA / 2),
-            }}
-          />
           {SOS_POINTS.map((obj, index) => (
             <MapView.Marker
               title="Punto S.O.S."
@@ -124,6 +112,7 @@ class Map extends React.Component {
                 latitude: obj.latitude,
                 longitude: obj.longitude,
               }}
+              image={runImage}
               key={index}
             />
           ))}
@@ -134,6 +123,7 @@ class Map extends React.Component {
                 latitude: obj.latitude,
                 longitude: obj.longitude,
               }}
+              image={walkImage}
               key={index}
             />
           ))}

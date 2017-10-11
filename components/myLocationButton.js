@@ -19,7 +19,7 @@ class MyLocationButton extends React.Component {
       <ActionButton
         buttonColor="rgba(255, 255, 255, 255)"
         onPress={this.props.onPress()}
-        icon={<MaterialIcon name="gps-fixed" style={styles.actionButtonIcon} />}
+        icon={<MaterialIcon name="my-location" style={styles.actionButtonIcon} />}
       />
     );
   }
