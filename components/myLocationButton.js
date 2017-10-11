@@ -12,13 +12,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const MyLocationButton = () => (
-  <ActionButton
-    buttonColor="rgba(255, 255, 255, 255)"
-    onPress={this.props.onPress()}
-    icon={<MaterialIcon name="gps-fixed" style={styles.actionButtonIcon} />}
-  />
-);
+// eslint-disable-next-line
+class MyLocationButton extends React.Component {
+  render() {
+    return (
+      <ActionButton
+        buttonColor="rgba(255, 255, 255, 255)"
+        onPress={this.props.onPress()}
+        icon={<MaterialIcon name="gps-fixed" style={styles.actionButtonIcon} />}
+      />
+    );
+  }
+}
 
 MyLocationButton.propTypes = {
   onPress: PropTypes.func,

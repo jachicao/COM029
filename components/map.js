@@ -104,7 +104,6 @@ class Map extends React.Component {
           provider={this.props.provider}
           style={styles.map}
           initialRegion={this.state.region}
-          showsUserLocation={true}
         >
           <MapView.Marker
             coordinate={{
@@ -127,8 +126,7 @@ class Map extends React.Component {
               }}
               key={index}
             />
-            )
-          )}
+          ))}
           {FOOTBRIDGES.map((obj, index) => (
             <MapView.Marker
               title="Pasarela"
@@ -138,8 +136,7 @@ class Map extends React.Component {
               }}
               key={index}
             />
-            )
-          )}
+          ))}
         </MapView>
       </View>
     );
