@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image } from 'react-native';
 import MapView from 'react-native-maps';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Communications from 'react-native-communications';
@@ -16,6 +16,10 @@ const styles = StyleSheet.create({
   },
   starIcon: {
     color: '#eb6e00',
+  },
+  icon: {
+    height: 25,
+    width: 25,
   },
 });
 
@@ -37,9 +41,9 @@ class Stores extends React.Component {
               latitude: obj.latitude,
               longitude: obj.longitude,
             }}
-            image={buildImage}
             key={index}
           >
+            <Image source={buildImage} style={styles.icon} />
             <MapView.Callout onPress={() => Communications.phonecall(obj.contact, true)}>
               <View>
                 <Text>{obj.name}</Text>

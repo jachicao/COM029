@@ -1,9 +1,16 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import MapView from 'react-native-maps';
 
 import { FOOTBRIDGES } from '../constants/footbridges';
 import walkImage from '../images/walk.png';
+
+const styles = StyleSheet.create({
+  icon: {
+    height: 25,
+    width: 25,
+  },
+});
 
 class Footbridges extends React.Component {
   constructor(props) {
@@ -23,9 +30,10 @@ class Footbridges extends React.Component {
               latitude: obj.latitude,
               longitude: obj.longitude,
             }}
-            image={walkImage}
             key={index}
-          />
+          >
+            <Image source={walkImage} style={styles.icon} />
+          </MapView.Marker>
         ))}
       </View>
     );

@@ -1,9 +1,16 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import MapView from 'react-native-maps';
 
 import { SOS_POINTS } from '../constants/sosPoints';
 import runImage from '../images/run.png';
+
+const styles = StyleSheet.create({
+  icon: {
+    height: 25,
+    width: 25,
+  },
+});
 
 class SosPoints extends React.Component {
   constructor(props) {
@@ -23,9 +30,10 @@ class SosPoints extends React.Component {
               latitude: obj.latitude,
               longitude: obj.longitude,
             }}
-            image={runImage}
             key={index}
-          />
+          >
+            <Image source={runImage} style={styles.icon} />
+          </MapView.Marker>
         ))}
       </View>
     );
