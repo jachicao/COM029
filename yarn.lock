@@ -3985,6 +3985,10 @@ react-native-action-button@^2.8.0:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-communications@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-communications/-/react-native-communications-2.2.1.tgz#7883b56b20a002eeb790c113f8616ea8692ca795"
+
 react-native-config@^0.8.1:
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.8.1.tgz#7b2467e746d3497051633804760535c63bde91cf"

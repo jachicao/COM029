@@ -13,7 +13,7 @@ export const FOOTBRIDGES = [
   { latitude: -33.3723833333333, longitude: -70.7310083333333 },
   { latitude: -33.3734083333333, longitude: -70.7222861111111 },
   { latitude: -33.3740361111111, longitude: -70.716775 },
-  { latitude: -33.3709638888888, longitude: -70.7077805555555 },
+  //{ latitude: -33.3709638888888, longitude: -70.7077805555555 },
   { latitude: -33.3657416666666, longitude: -70.6962916666666 },
   { latitude: -33.3657527777777, longitude: -70.6945694444444 },
   { latitude: -33.366425, longitude: -70.6848916666666 },

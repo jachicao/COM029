@@ -1,56 +1,26 @@
 import React from 'react';
-
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-} from 'react-native';
-
+import { StyleSheet, View, Dimensions } from 'react-native';
 import MapView from 'react-native-maps';
 
-import { FOOTBRIDGES } from '../constants/footbridges';
-import { SOS_POINTS } from '../constants/sosPoints';
-import runImage from '../images/run.png';
-import walkImage from '../images/walk.png';
+import Stores from './stores';
+import Footbridges from './footbridges';
+import SosPoints from './sosPoints';
+import MyLocationMarker from './myLocationMarker';
+import MyLocationButton from './myLocationButton';
 
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
 const LATITUDE = -33.406510645638214;
 const LONGITUDE = -70.69873809814453;
-const LATITUDE_DELTA = 0.0922;
+const LATITUDE_DELTA = 0.09;// 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const styles = StyleSheet.create({
-  callout: {
-    width: 60,
-  },
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     alignItems: 'center',
-  },
-  event: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    padding: 8,
-  },
-  eventData: {
-    fontSize: 10,
-    fontFamily: 'courier',
-    color: '#555',
-  },
-  eventName: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#222',
-  },
-  eventList: {
-    position: 'absolute',
-    top: height / 2,
-    left: 0,
-    right: 0,
-    bottom: 0,
   },
   map: {
     position: 'absolute',
@@ -58,27 +28,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-  },
-  bubble: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 20,
-  },
-  latlng: {
-    width: 200,
-    alignItems: 'stretch',
-  },
-  button: {
-    width: 80,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginVertical: 20,
-    backgroundColor: 'transparent',
   },
 });
 
@@ -94,47 +43,61 @@ class Map extends React.Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
+      myPosition: null,
+      focusMyPosition: false,
+      focusing: false,
     };
   }
 
+  onFocus() {
+    if (this.state.myPosition != null) {
+      this.setState({ focusMyPosition: true, focusing: true });
+      if (this.map != null) {
+        this.map.animateToCoordinate(this.state.myPosition);
+      }
+    }
+  }
+  onNewPosition(position) {
+    const isNull = this.state.myPosition == null;
+    this.setState({ myPosition: position });
+    if (isNull) {
+      this.onFocus();
+    }
+  }
+  onRegionChange() {
+    if (!this.state.focusing) {
+      this.setState({ focusMyPosition: false });
+    }
+  }
+  onRegionChangeComplete() {
+    if (this.state.focusing) {
+      this.setState({ focusing: false });
+    }
+  }
   render() {
     return (
       <View style={styles.container}>
         <MapView
-          provider={this.props.provider}
           style={styles.map}
           initialRegion={this.state.region}
+          ref={(ref) => { this.map = ref; }}
+          onRegionChange={() => { this.onRegionChange(); }}
+          onRegionChangeComplete={() => { this.onRegionChangeComplete(); }}
         >
-          {SOS_POINTS.map((obj, index) => (
-            <MapView.Marker
-              title="Punto S.O.S."
-              coordinate={{
-                latitude: obj.latitude,
-                longitude: obj.longitude,
-              }}
-              image={runImage}
-              key={index}
-            />
-          ))}
-          {FOOTBRIDGES.map((obj, index) => (
-            <MapView.Marker
-              title="Pasarela"
-              coordinate={{
-                latitude: obj.latitude,
-                longitude: obj.longitude,
-              }}
-              image={walkImage}
-              key={index}
-            />
-          ))}
+          <SosPoints />
+          <Stores />
+          <Footbridges />
+          <MyLocationMarker
+            onNewPosition={(position) => { this.onNewPosition(position); }}
+          />
         </MapView>
+        <MyLocationButton
+          onPress={() => { this.onFocus(); }}
+          focus={this.state.focusMyPosition}
+        />
       </View>
     );
   }
 }
-
-Map.propTypes = {
-  provider: MapView.ProviderPropType
-};
 
 export default Map;

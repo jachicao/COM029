@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ActionButton from 'react-native-action-button';
 import { StyleSheet } from 'react-native';
+import ActionButton from 'react-native-action-button';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 const styles = StyleSheet.create({
-  actionButtonIcon: {
+  focusIcon: {
     fontSize: 20,
     height: 22,
     color: '#4285f4',
+  },
+  notFocusIcon: {
+    fontSize: 20,
+    height: 22,
+    color: '#616161',
   },
 });
 
@@ -18,8 +23,13 @@ class MyLocationButton extends React.Component {
     return (
       <ActionButton
         buttonColor="rgba(255, 255, 255, 255)"
-        onPress={this.props.onPress()}
-        icon={<MaterialIcon name="my-location" style={styles.actionButtonIcon} />}
+        onPress={() => { this.props.onPress(); }}
+        icon={
+          <MaterialIcon
+            name="my-location"
+            style={this.props.focus ? styles.focusIcon : styles.notFocusIcon}
+          />
+        }
       />
     );
   }
@@ -27,10 +37,12 @@ class MyLocationButton extends React.Component {
 
 MyLocationButton.propTypes = {
   onPress: PropTypes.func,
+  focus: PropTypes.bool,
 };
 
 MyLocationButton.defaultProps = {
   onPress: () => {},
+  focus: false,
 };
 
 export default MyLocationButton;

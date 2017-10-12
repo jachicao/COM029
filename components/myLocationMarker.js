@@ -1,19 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  StyleSheet,
-  Text,
-  View,
-  PermissionsAndroid,
-  Platform,
-} from 'react-native';
+import { StyleSheet, Text, View, PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
 import isEqual from 'lodash/isEqual';
 
 const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 };
 const ANCHOR = { x: 0.5, y: 0.5 };
 
-const colorOfmyLocationMapMarker = '#4285f4';
+const COLOR_MAKER = '#4285f4';
 
 const propTypes = {
   ...MapView.Marker.propTypes,
@@ -30,11 +24,13 @@ const propTypes = {
   }),
   heading: PropTypes.number,
   enableHack: PropTypes.bool,
+  onNewPosition: PropTypes.func,
 };
 
 const defaultProps = {
   enableHack: false,
   geolocationOptions: GEOLOCATION_OPTIONS,
+  onNewPosition: () => {},
 };
 
 
@@ -48,6 +44,11 @@ const HEADING_BOX_SIZE = HALO_SIZE + ARROW_SIZE + ARROW_DISTANCE;
 const styles = StyleSheet.create({
   mapMarker: {
     zIndex: 1000,
+  },
+  viewContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   // The container is necessary to protect the markerHalo shadow from clipping
   container: {
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: ARROW_SIZE * 0.75,
     borderTopColor: 'transparent',
     borderRightColor: 'transparent',
-    borderBottomColor: colorOfmyLocationMapMarker,
+    borderBottomColor: COLOR_MAKER,
     borderLeftColor: 'transparent',
   },
   markerHalo: {
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
   },
   marker: {
     justifyContent: 'center',
-    backgroundColor: colorOfmyLocationMapMarker,
+    backgroundColor: COLOR_MAKER,
     width: SIZE,
     height: SIZE,
     borderRadius: Math.ceil(SIZE / 2),
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class MyLocation extends React.PureComponent {
+class MyLocationMarker extends React.PureComponent {
   constructor(props) {
     super(props);
     this.mounted = false;
@@ -139,13 +140,14 @@ export default class MyLocation extends React.PureComponent {
       const myPosition = position.coords;
       if (!isEqual(myPosition, myLastPosition)) {
         this.setState({ myPosition });
+        this.props.onNewPosition(myPosition);
       }
     }, null, this.props.geolocationOptions);
   }
   render() {
     let { heading, coordinate } = this.props;
+    const { myPosition } = this.state;
     if (!coordinate) {
-      const { myPosition } = this.state;
       if (!myPosition) return null;
       coordinate = myPosition;
       heading = myPosition.heading;
@@ -154,30 +156,34 @@ export default class MyLocation extends React.PureComponent {
     const rotate = (typeof heading === 'number' && heading >= 0) ? `${heading}deg` : null;
 
     return (
-      <MapView.Marker
-        anchor={ANCHOR}
-        style={styles.mapMarker}
-        {...this.props}
-        coordinate={coordinate}
-      >
-        <View style={styles.container}>
-          <View style={styles.markerHalo} />
-          {rotate &&
-            <View style={[styles.heading, { transform: [{ rotate }] }]}>
-              <View style={styles.headingPointer} />
+      <View style={styles.viewContainer}>
+        <MapView.Marker
+          anchor={ANCHOR}
+          style={styles.mapMarker}
+          {...this.props}
+          coordinate={coordinate}
+        >
+          <View style={styles.container}>
+            <View style={styles.markerHalo} />
+            {rotate &&
+              <View style={[styles.heading, { transform: [{ rotate }] }]}>
+                <View style={styles.headingPointer} />
+              </View>
+            }
+            <View style={styles.marker}>
+              <Text style={{ width: 0, height: 0 }}>
+                {this.props.enableHack && rotate}
+              </Text>
             </View>
-          }
-          <View style={styles.marker}>
-            <Text style={{ width: 0, height: 0 }}>
-              {this.props.enableHack && rotate}
-            </Text>
           </View>
-        </View>
-        {this.props.children}
-      </MapView.Marker>
+          {this.props.children}
+        </MapView.Marker>
+      </View>
     );
   }
 }
 
-MyLocation.propTypes = propTypes;
-MyLocation.defaultProps = defaultProps;
+MyLocationMarker.propTypes = propTypes;
+MyLocationMarker.defaultProps = defaultProps;
+
+export default MyLocationMarker;
